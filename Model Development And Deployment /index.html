@@ -1,0 +1,49 @@
+<html>
+<body>
+  <h2>House Price Prediction</h2>
+  <form id="prediction-form">
+    <label for="location">Location:</label>
+    <input type="text" id="location" name="location"><br><br>
+    <label for="bhk">BHK:</label>
+    <input type="number" id="bhk" name="bhk"><br><br>
+    <label for="furnishing">Furnishing:</label>
+    <input type="text" id="furnishing" name="furnishing"><br><br>
+    <label for="size">Size (sqft):</label>
+    <input type="number" id="size" name="size"><br><br>
+    <input type="submit" value="Predict">
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    document.getElementById('prediction-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const location = document.getElementById('location').value;
+      const bhk = document.getElementById('bhk').value;
+      const furnishing = document.getElementById('furnishing').value;
+      const size = document.getElementById('size').value;
+
+      fetch('http://127.0.0.1:5000/predict', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          location: location,
+          bhk: bhk,
+          furnishing: furnishing,
+          size: size
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('result').innerText = `Predicted Price: ${data.predicted_price} lakhs`;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+  </script>
+</body>
+</html>
